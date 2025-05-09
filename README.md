@@ -1,7 +1,8 @@
-# Introduction
-This repository simulates the movement of 3 massive gravitational bodies in 2D space.
+# Simulation of the 3-body Problem
+## Introduction
+The 3-body problem is perhaps one of the most famous problems in physics. This repository simulates this problem using numerical methods in Python.
 
-# Description
+## Description
 Using Newton's law of universal gravitation, we can model the movement of three gravitational bodies using the following three second-order differential equations for the acceleration of the three bodies:
 
 $$\ddot{\mathbf{r_1}} = Gm_2\frac{\mathbf{r_2} - \mathbf{r_1}}{{\lvert \mathbf{r_2} - \mathbf{r_1} \rvert}^3} + Gm_3\frac{\mathbf{r_3} - \mathbf{r_1}}{{\lvert \mathbf{r_3} - \mathbf{r_1} \rvert}^3}$$
@@ -10,7 +11,7 @@ $$\ddot{\mathbf{r_2}} = Gm_3\frac{\mathbf{r_3} - \mathbf{r_2}}{{\lvert \mathbf{r
 
 $$\ddot{\mathbf{r_3}} = Gm_1\frac{\mathbf{r_1} - \mathbf{r_3}}{{\lvert \mathbf{r_1} - \mathbf{r_3} \rvert}^3} + Gm_2\frac{\mathbf{r_2} - \mathbf{r_3}}{{\lvert \mathbf{r_2} - \mathbf{r_3} \rvert}^3}$$
 
-This simulation seeks to numerically integrate and animate the result using `matplotlib`.
+This simulation seeks to numerically integrate and animate these equations using `matplotlib` and `numpy`.
 
 ## Installation
 This section will describe how to download and run this simulation in Linux. This simulation requires the packages `numpy` and `matplotlib`. First, run the following command in the command terminal to ensure Python is installed: 
@@ -20,10 +21,51 @@ Next, run the following commands to install `numpy` and `matplotlib`:
 python3 -m pip install numpy
 python3 -m pip install matplotlib
 ```
+Next, navigate to a desired directory and clone the repository using the following git command:
 
+```
+git clone https://github.com/weffington/3-body-Project
+```
+
+Finally, navigate to the Simulation directory.
+
+## Usage
+This project uses a test simulation with predefined initial positions and velocities. To run the test simulation, enter 
+```
+./runtest.sh
+```
+
+into the command line. What you should see is described below.
+
+To run the actual simulation, enter 
+```
+./runsim.sh
+```
+What you should see is described below.
+You will get the following prompt in the command terminal:
+```
+Enter position coordinates for each body (e.g. (2,2),(3,3),(4,4)):
+```
+This prompt is asking you for the initial xy positions for each of the three bodies. Enter the xy positions in the exact form listed in the example in the prompt. For example:
+```
+Enter position coordinates for each body (e.g. (2,2),(3,3),(4,4)):
+(1,2),(2,3),(4,1)
+``` 
+After entering the xy positions, you will get another prompt:
+```
+Enter velocity vectors in the same form (e.g. (1,0),(2,0),(0,0)):
+```
+This prompt is asking for the initial 2d velocity vectors in the same format as the initial positions. Enter them. For example:
+```
+Enter velocity vectors in the same form (e.g. (1,0),(2,0),(0,0)):
+(2,2),(1,0),(1,1)
+```
+You will then see a window pop up on your screen showing an animation of the 3-body simulation. This is a live animation of the paths of the three bodies. The x and y axes scale as the bodies move to keep each of the three objects in view. Below is a video of this process:
+
+It is worth noting that the animation will slow down as each object gets closer to one another. This is due to using a numerical algorithm that has an adaptive step size. When each object gets closer together, the time step will decrease to increase precision, slowing the animation down in the process. This adaptive step size process is described below in the following section.
 
 ## Methods
-This section will outline the mathematical methods used to simulate the 3-body problem.
+This section will outline the mathematical and coding methods used to simulate the 3-body problem. As stated above, the three body problem can be modeled with the following equations:
 
 $$\ddot{\mathbf{r_1}} = Gm_2\frac{\mathbf{r_2} - \mathbf{r_1}}{{\lvert \mathbf{r_2} - \mathbf{r_1} \rvert}^3} + Gm_3\frac{\mathbf{r_3} - \mathbf{r_1}}{{\lvert \mathbf{r_3} - \mathbf{r_1} \rvert}^3}$$
 
@@ -31,7 +73,7 @@ $$\ddot{\mathbf{r_2}} = Gm_3\frac{\mathbf{r_3} - \mathbf{r_2}}{{\lvert \mathbf{r
 
 $$\ddot{\mathbf{r_3}} = Gm_1\frac{\mathbf{r_1} - \mathbf{r_3}}{{\lvert \mathbf{r_1} - \mathbf{r_3} \rvert}^3} + Gm_2\frac{\mathbf{r_2} - \mathbf{r_3}}{{\lvert \mathbf{r_2} - \mathbf{r_3} \rvert}^3}$$
 
- Each $\ddot{\mathbf{r_n}}$ represents the position vectors for each of the three bodies. However, notice that each of these equations will blow up in proportion with $\frac{1}{r^3}$. This will cause problems when numerically integrating these equations as we will obtain very high acceleration values when this happens, causing numerical errors and animating problems. We therefore will insert a softening term $\epsilon$ and rewrite the equations as the following:
+The denominators in each of these three equations will be problematic when coding the simulation, as each equation will blow up as the three bodies get closer together. To get around this, we insert a softening term $\epsilon$ into the denominators:
 
 $$\ddot{\mathbf{r_1}} = Gm_2\frac{\mathbf{r_2} - \mathbf{r_1}}{({\lvert \mathbf{r_2} - \mathbf{r_1} \rvert^2 + \epsilon^2})^{1.5}} + Gm_3\frac{\mathbf{r_3} - \mathbf{r_1}}{({\lvert \mathbf{r_3} - \mathbf{r_1} \rvert^2 + \epsilon^2})^{1.5}}$$
 
@@ -41,6 +83,7 @@ $$\ddot{\mathbf{r_3}} = Gm_1\frac{\mathbf{r_1} - \mathbf{r_3}}{({\lvert \mathbf{
 
 
 In the case of this particular simulation, $\epsilon = 0.01$. We want to use numerical methods to solve these three differential equations. We therefore can use a simple change of variables to write the above equations in the following form:
+
 $$\mathbf{v_1} = \mathbf{\dot{\mathbf{r_1}}}$$
 
 $$\mathbf{v_2} = \mathbf{\dot{\mathbf{r_2}}}$$
@@ -55,7 +98,7 @@ $$\mathbf{\dot{v_3}} = \mathbf{\ddot{\mathbf{r_3}}}$$
 
 Each $\mathbf{v_n}$ in this equation represents the velocity of each object. We are now ready for numerical approximations.
 
-This simulation numerically integrates these equations using the Runge-Kutta-Fehlberg method. The Runge-Kutta-Fehlberg method is different from other Runge-Kutte methods in that it has an adaptive step size built into its algorithm. An adaptive step size is important for this problem, as it will let our simulation run much faster than a fixed step size, as well as better approximations when each body moves closer together. The coefficients for the Runge-Kutta-Fehlberg method is given by the following equations:
+This simulation numerically integrates these equations using the Runge-Kutta-Fehlberg method. The Runge-Kutta-Fehlberg method is different from other Runge-Kutte methods in that it has an adaptive step size built into its algorithm. An adaptive step size is important for this problem, as it will let our simulation run much faster than a fixed step size, as well as better approximations when each body moves closer together. The $k$ values for the Runge-Kutta-Fehlberg method are given by the following equations:
 
 $${\displaystyle {\begin{aligned}k_{1}&=h\cdot f(x+A(1)\cdot h,y)\\k_{2}&=h\cdot f(x+A(2)\cdot h,y+B(2,1)\cdot k_{1})\\k_{3}&=h\cdot f(x+A(3)\cdot h,y+B(3,1)\cdot k_{1}+B(3,2)\cdot k_{2})\\k_{4}&=h\cdot f(x+A(4)\cdot h,y+B(4,1)\cdot k_{1}+B(4,2)\cdot k_{2}+B(4,3)\cdot k_{3})\\k_{5}&=h\cdot f(x+A(5)\cdot h,y+B(5,1)\cdot k_{1}+B(5,2)\cdot k_{2}+B(5,3)\cdot k_{3}+B(5,4)\cdot k_{4})\\k_{6}&=h\cdot f(x+A(6)\cdot h,y+B(6,1)\cdot k_{1}+B(6,2)\cdot k_{2}+B(6,3)\cdot k_{3}+B(6,4)\cdot k_{4}+B(6,5)\cdot k_{5})\end{aligned}}}$$
 
@@ -70,6 +113,7 @@ $${\displaystyle \mathrm {TE} =\left|\mathrm {CT} (1)\cdot k_{1}+\mathrm {CT} (2
 
 $${\displaystyle h_{\text{new}}=0.9\cdot h\cdot \left({\frac {\varepsilon }{TE}}\right)^{1/5}}$$
 
-Again, we have each $CH(i)$ and $CT(j)$ representing more RKF45 coefficients and $\epsilon$ representing an arbitrary tolerance value. Each of these equations were taken directly from the Wikipedia page about [Runge-Kutta-Fehlberg](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta%E2%80%93Fehlberg_method). The coefficients used in this simulation also come from Wikipedia, specifically from the second coefficient table in the article. 
+Again, we have each $CH(i)$ and $CT(j)$ representing more RKF45 coefficients and $\epsilon$ representing an arbitrary tolerance value. Each of these equations were taken directly from the Wikipedia page about [Runge-Kutta-Fehlberg](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta%E2%80%93Fehlberg_method). The coefficients used in this simulation also come from Wikipedia, specifically from the second coefficient table listed in the article. 
+
 
 
