@@ -104,7 +104,7 @@ Each $\mathbf{v_n}$ in this equation represents the velocity of each object. We 
 
 This simulation numerically integrates these equations using the Runge-Kutta-Fehlberg method. The Runge-Kutta-Fehlberg method is different from other Runge-Kutte methods in that it has an adaptive step size built into its algorithm. An adaptive step size is important for this problem, as it will let our simulation run much faster than a fixed step size, as well as better approximations when each body moves closer together. The $k$ values for the Runge-Kutta-Fehlberg method are given by the following equations:
 
-$${\displaystyle {\begin{aligned}k_{1}&=h\cdot f(x+A(1)\cdot h,y)\\k_{2}&=h\cdot f(x+A(2)\cdot h,y+B(2,1)\cdot k_{1})\\k_{3}&=h\cdot f(x+A(3)\cdot h,y+B(3,1)\cdot k_{1}+B(3,2)\cdot k_{2})\\k_{4}&=h\cdot f(x+A(4)\cdot h,y+B(4,1)\cdot k_{1}+B(4,2)\cdot k_{2}+B(4,3)\cdot k_{3})\\k_{5}&=h\cdot f(x+A(5)\cdot h,y+B(5,1)\cdot k_{1}+B(5,2)\cdot k_{2}+B(5,3)\cdot k_{3}+B(5,4)\cdot k_{4})\\k_{6}&=h\cdot f(x+A(6)\cdot h,y+B(6,1)\cdot k_{1}+B(6,2)\cdot k_{2}+B(6,3)\cdot k_{3}+B(6,4)\cdot k_{4}+B(6,5)\cdot k_{5})\end{aligned}}}$$
+$$k_{1}=h\cdot f(x+A(1)\cdot h,y),k_{2}=h\cdot f(x+A(2)\cdot h,y+B(2,1)\cdot k_{1}),k_{3}=h\cdot f(x+A(3)\cdot h,y+B(3,1)\cdot k_{1}+B(3,2)\cdot k_{2}),k_{4}=h\cdot f(x+A(4)\cdot h,y+B(4,1)\cdot k_{1}+B(4,2)\cdot k_{2}+B(4,3)\cdot k_{3}),k_{5}=h\cdot f(x+A(5)\cdot h,y+B(5,1)\cdot k_{1}+B(5,2)\cdot k_{2}+B(5,3)\cdot k_{3}+B(5,4)\cdot k_{4}),k_{6}=h\cdot f(x+A(6)\cdot h,y+B(6,1)\cdot k_{1}+B(6,2)\cdot k_{2}+B(6,3)\cdot k_{3}+B(6,4)\cdot k_{4}+B(6,5)\cdot k_{5})$$
 
 where each $A(n)$ and $B(l,m)$ values represent certain coefficients. Likewise,
 
