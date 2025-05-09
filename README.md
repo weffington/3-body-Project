@@ -32,13 +32,15 @@ Finally, navigate to the Simulation directory.
 ## Usage
 This project uses a test simulation with predefined initial positions and velocities. To run the test simulation, enter 
 ```
+chmod +x runtest.sh
 ./runtest.sh
 ```
 
-into the command line. What you should see is described below.
+into the command line. This test file is used to ensure the simulation works properly. Run this test before running the simulation. What you should see is described below.
 
-To run the actual simulation, enter 
+To run the actual simulation, enter the following commands:
 ```
+chmod +x runsim.sh
 ./runsim.sh
 ```
 What you should see is described below.
@@ -60,9 +62,11 @@ This prompt is asking for the initial 2d velocity vectors in the same format as 
 Enter velocity vectors in the same form (e.g. (1,0),(2,0),(0,0)):
 (2,2),(1,0),(1,1)
 ```
-You will then see a window pop up on your screen showing an animation of the 3-body simulation. This is a live animation of the paths of the three bodies. The x and y axes scale as the bodies move to keep each of the three objects in view. Below is a video of this process:
+You will then see a window pop up on your screen showing an animation of the 3-body simulation. This is a live animation of the paths of the three bodies. The x and y axes scale as the bodies move to keep each of the three objects in view. A video demonstrating this process is available in the repository
 
 It is worth noting that the animation will slow down as each object gets closer to one another. This is due to using a numerical algorithm that has an adaptive step size. When each object gets closer together, the time step will decrease to increase precision, slowing the animation down in the process. This adaptive step size process is described below in the following section.
+
+To stop the animation, simply close the popup window.
 
 ## Methods
 This section will outline the mathematical and coding methods used to simulate the 3-body problem. As stated above, the three body problem can be modeled with the following equations:
@@ -115,5 +119,10 @@ $${\displaystyle h_{\text{new}}=0.9\cdot h\cdot \left({\frac {\varepsilon }{TE}}
 
 Again, we have each $CH(i)$ and $CT(j)$ representing more RKF45 coefficients and $\epsilon$ representing an arbitrary tolerance value. Each of these equations were taken directly from the Wikipedia page about [Runge-Kutta-Fehlberg](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta%E2%80%93Fehlberg_method). The coefficients used in this simulation also come from Wikipedia, specifically from the second coefficient table listed in the article. 
 
+## Licensing
+This project is licensed under MIT.
+
+## Acknowledgements
+Special thanks to the [Runge-Kutta-Fehlberg](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta%E2%80%93Fehlberg_method) Wikipedia article for help with my Runge-Kutta-Fehlberg algorithm.
 
 
